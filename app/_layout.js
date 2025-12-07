@@ -6,6 +6,8 @@ export default function Layout() {
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="login" options={{ headerShown: false }} />
       <Stack.Screen name="register" options={{ headerShown: false }} />
+      <Stack.Screen name="AddTask" options={{ title: 'Add New Task' }} />
+      <Stack.Screen name="dashboard" options={{ title: 'Dashboard' }} />
       
     </Stack>
   );

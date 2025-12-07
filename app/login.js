@@ -1,25 +1,39 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
-import { Link } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useRouter } from "expo-router";
+import api from "../api/axios";
 
 export default function LoginScreen() {
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleLogin = async () => {
+    try {
+      const res = await api.post("/users/login", { email, password });
+
+      await AsyncStorage.setItem("token", res.data.token);
+      router.push("/dashboard");
+    } catch (err) {
+      console.log("LOGIN ERROR:", err.response?.data || err.message);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Login</Text>
 
-      <TextInput placeholder="Email" style={styles.input} />
-      <TextInput placeholder="Password" secureTextEntry={true} style={styles.input} />
+      <TextInput placeholder="Email" style={styles.input} value={email} onChangeText={setEmail} />
+      <TextInput placeholder="Password" secureTextEntry={true} style={styles.input} value={password} onChangeText={setPassword} />
 
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
-
-      <Link href="/register">
-        <Text style={styles.link}> Register</Text>
-      </Link>
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 20, justifyContent: "center" },
